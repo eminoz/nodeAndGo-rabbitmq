@@ -1,10 +1,12 @@
 const User = require("../model/user");
 const UserRepository = require("../repository/user");
 const UserService = require("../service/user");
+const RabbitMQ = require("../broker/rabbitProducer");
 const express = require("express");
 const UserApi = require("../api/user");
+const Broker = new RabbitMQ();
 const UserRepo = new UserRepository(User);
-const UserSer = new UserService(UserRepo);
+const UserSer = new UserService(UserRepo, Broker);
 const UserController = new UserApi(UserSer);
 
 const router = express.Router();

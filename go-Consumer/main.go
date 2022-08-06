@@ -8,8 +8,8 @@ import (
 )
 
 type User struct {
-	Name    string `json:"name"`
-	Surname string `json:"surname"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 func main() {
@@ -30,19 +30,17 @@ func consume() {
 	}
 
 	q, err := ch.QueueDeclare(
-		"hello", // name
-		true,    // durable
-		false,   // delete when unused
-		false,   // exclusive
-		false,   // no-wait
-		nil,     // arguments
+		"mailqueue", // name
+		true,        // durable
+		false,       // delete when unused
+		false,       // exclusive
+		false,       // no-wait
+		nil,         // arguments
 	)
 
 	if err != nil {
 		log.Fatalf("%s: %s", "Failed to declare a queue", err)
 	}
-
-	fmt.Println("Channel and Queue established")
 
 	defer conn.Close()
 	defer ch.Close()
@@ -62,18 +60,13 @@ func consume() {
 	}
 
 	forever := make(chan bool)
-
 	go func() {
-
 		for d := range msgs {
 			user := User{}
 			json.Unmarshal(d.Body, &user)
-			fmt.Printf("Received a message: %s", user.Name)
-
+			fmt.Println(user.Email, "'e mail yollandı ")
 			d.Ack(false)
 		}
 	}()
-
-	fmt.Println("Running...")
 	<-forever
 }

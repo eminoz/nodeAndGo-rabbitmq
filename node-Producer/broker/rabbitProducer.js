@@ -7,7 +7,7 @@ module.exports = class RabbitMQ {
     try {
       const connection = await amqp.connect(rabbitUrl);
       const channel = await connection.createChannel();
-      await channel.assertQueue(queueName);
+      await channel.assertQueue(queueName, { durable: true });
       await channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data)));
       setTimeout(() => {
         connection.close();

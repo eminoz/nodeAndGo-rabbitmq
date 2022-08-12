@@ -9,5 +9,7 @@ import (
 func main() {
 	config.SetupConfig()
 	database.SetDatabase()
+
 	broker.Consumers()
+
 }
